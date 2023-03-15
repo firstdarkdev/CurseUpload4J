@@ -35,7 +35,6 @@ import me.hypherionmc.curseupload.util.HTTPUtils;
 import java.io.Reader;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.logging.Level;
 
 import static me.hypherionmc.curseupload.constants.ApiEndpoints.VERSION_TYPES_URL;
 import static me.hypherionmc.curseupload.constants.ApiEndpoints.VERSION_URL;
@@ -86,7 +85,7 @@ public class GameVersions {
                 }
             }
         } catch (Exception e) {
-            CurseUploadApi.INSTANCE.getLogger().log(Level.SEVERE, "Failed to fetch Curseforge Versions", e);
+            CurseUploadApi.INSTANCE.getLogger().error("Failed to fetch Curseforge Versions", e);
         }
     }
 

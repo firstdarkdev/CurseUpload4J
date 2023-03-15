@@ -46,7 +46,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.util.*;
-import java.util.logging.Level;
 
 import static me.hypherionmc.curseupload.constants.ApiEndpoints.UPLOAD_URL;
 
@@ -305,7 +304,7 @@ public class CurseArtifact {
                     final InputStreamReader reader = new InputStreamReader(response.getEntity().getContent());
                     this.curseFileId = HTTPUtils.gson.fromJson(reader, ResponseSuccess.class).id;
                     reader.close();
-                    CurseUploadApi.INSTANCE.getLogger().log(Level.INFO, String.format("Successfully uploaded artifact %s with ID %s", this.artifact.getName(), this.curseFileId));
+                    CurseUploadApi.INSTANCE.getLogger().error("Successfully uploaded artifact {} with ID {}", this.artifact.getName(), this.curseFileId);
                 } else {
                     int errorCode = response.getStatusLine().getStatusCode();
                     String errorMessage = response.getStatusLine().getReasonPhrase();
@@ -318,11 +317,10 @@ public class CurseArtifact {
                         errorCode = error.errorCode;
                         errorMessage = error.errorMessage;
                     }
-                    CurseUploadApi.INSTANCE.getLogger().log(Level.SEVERE, String.format("Failed to Upload artifact to Curseforge. Code: %s, Error: %s", errorCode, errorMessage));
-                    System.err.println(errorCode + ": " + errorMessage);
+                    CurseUploadApi.INSTANCE.getLogger().error("Failed to Upload artifact to Curseforge. Code: {}, Error: {}", errorCode, errorMessage);
                 }
             } catch (Exception e) {
-                CurseUploadApi.INSTANCE.getLogger().log(Level.SEVERE, "Failed to Upload artifact to Curseforge.", e);
+                CurseUploadApi.INSTANCE.getLogger().error("Failed to Upload artifact to Curseforge.", e);
             }
         } else {
             // Do not upload the file. Instead, write the JSON that will be sent to the console
@@ -330,7 +328,7 @@ public class CurseArtifact {
             object.addProperty("metadata", HTTPUtils.gson.toJson(this.writeMetaData()));
             object.addProperty("file", this.artifact.getName());
 
-            CurseUploadApi.INSTANCE.getLogger().log(Level.INFO, HTTPUtils.gson.toJson(object));
+            CurseUploadApi.INSTANCE.getLogger().error(HTTPUtils.gson.toJson(object));
         }
     }
 

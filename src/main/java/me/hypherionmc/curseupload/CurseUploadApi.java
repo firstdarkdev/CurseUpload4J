@@ -25,9 +25,10 @@ package me.hypherionmc.curseupload;
 
 import me.hypherionmc.curseupload.requests.CurseArtifact;
 import me.hypherionmc.curseupload.requests.GameVersions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.FileNotFoundException;
-import java.util.logging.Logger;
 
 /**
  * @author HypherionSA
@@ -37,7 +38,7 @@ public class CurseUploadApi {
 
     // A static reference to an instance of this class. Used internally
     public static CurseUploadApi INSTANCE;
-    private final Logger logger = Logger.getLogger("CurseUpload4J");
+    private final Logger logger;
 
     // Upload API Token. Required
     private final String apiKey;
@@ -53,7 +54,17 @@ public class CurseUploadApi {
      * @param apiKey API Key REQUIRED to use any of the upload endpoints
      */
     public CurseUploadApi(String apiKey) {
+        this(apiKey, LoggerFactory.getLogger("CurseUpload4J"));
+    }
+
+    /**
+     * Create a new API Client
+     * @param apiKey API Key REQUIRED to use any of the upload endpoints
+     * @param logger SLF4J Logger to use instead of the default one
+     */
+    public CurseUploadApi(String apiKey, Logger logger) {
         this.apiKey = apiKey;
+        this.logger = logger;
         this.gameVersions = new GameVersions();
         INSTANCE = this;
 
