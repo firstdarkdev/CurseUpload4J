@@ -107,7 +107,7 @@ public class CurseArtifact {
      * Optional Display Name that will be added to the uploaded file
      */
     public CurseArtifact displayName(String name) {
-        this.displayName = displayName;
+        this.displayName = name;
         return this;
     }
 
