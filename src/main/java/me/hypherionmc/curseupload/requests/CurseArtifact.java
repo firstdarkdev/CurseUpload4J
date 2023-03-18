@@ -276,7 +276,7 @@ public class CurseArtifact {
         }
 
         for (Map.Entry<String, String> relation : this.relationships.entrySet()) {
-            this.uploadRelations.addRelation(relation.getKey(), CurseRelationType.valueOf(relation.getValue()));
+            this.uploadRelations.addRelation(relation.getKey(), CurseRelationType.valueOf(relation.getValue().toUpperCase()));
         }
 
         this.uploadVersions = CurseUploadApi.INSTANCE.getGameVersions().resolveGameVersion(gameVersions);
