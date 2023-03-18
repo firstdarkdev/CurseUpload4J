@@ -25,6 +25,8 @@ package me.hypherionmc.curseupload.constants;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Arrays;
+
 /**
  * @author HypherionSA
  * Curseforge Dependency Type Helper
@@ -51,6 +53,9 @@ public enum CurseRelationType {
         this.name = name;
     }
 
+    public static CurseRelationType findValue(String value) {
+        return Arrays.stream(CurseRelationType.values()).filter(t -> t.toString().equalsIgnoreCase(value)).findFirst().get();
+    }
 
     @Override
     public String toString() {
