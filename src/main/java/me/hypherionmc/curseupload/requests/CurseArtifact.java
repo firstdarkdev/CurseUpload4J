@@ -325,7 +325,7 @@ public class CurseArtifact {
         } else {
             // Do not upload the file. Instead, write the JSON that will be sent to the console
             JsonObject object = new JsonObject();
-            object.addProperty("metadata", HTTPUtils.gson.toJson(this.writeMetaData()));
+            object.add("metadata", HTTPUtils.gson.toJsonTree(this.writeMetaData()));
             object.addProperty("file", this.artifact.getName());
 
             CurseUploadApi.INSTANCE.getLogger().error(HTTPUtils.gson.toJson(object));
