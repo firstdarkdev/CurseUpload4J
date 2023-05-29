@@ -70,7 +70,7 @@ public class GameVersions {
             versionReader.close();
 
             for (VersionType type : types) {
-                if (type.slug().startsWith("minecraft") || type.slug().equals("java") || type.slug().equals("modloader")) {
+                if (type.slug().startsWith("minecraft") || type.slug().equals("java") || type.slug().equals("environment") || type.slug().equals("modloader")) {
                     validVersionTypes.add(type.id());
                 }
             }
