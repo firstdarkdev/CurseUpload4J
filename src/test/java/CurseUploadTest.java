@@ -15,6 +15,7 @@ public class CurseUploadTest {
         artifact.changelog("This is a sample changelog");
         artifact.changelogType(CurseChangelogType.TEXT);
         artifact.addGameVersion("1.19.2").addGameVersion("1.16.5");
+        artifact.addGameVersion("client").addGameVersion("server");
         artifact.modLoader("forge").modLoader("fabric");
         artifact.displayName("This is a sample file");
         artifact.releaseType(CurseReleaseType.BETA);

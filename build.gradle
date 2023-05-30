@@ -7,7 +7,7 @@ plugins {
 }
 
 group 'me.hypherionmc.modutils'
-version '1.0.6'
+version '1.0.7'
 java.toolchain.languageVersion = JavaLanguageVersion.of(8)
 
 configurations {
