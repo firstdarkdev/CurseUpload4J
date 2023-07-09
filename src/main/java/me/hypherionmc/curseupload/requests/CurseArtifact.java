@@ -247,14 +247,16 @@ public class CurseArtifact {
      * Check that all required info is supplied before trying to upload
      */
     private void validate() {
-        CurseUploadApi.INSTANCE.getGameVersions().refresh();
-        if (changelog == null || changelog.isEmpty()) {
-            throw new IllegalArgumentException("Changelog cannot be empty");
-        }
+       if (this.parent == null) {
+           CurseUploadApi.INSTANCE.getGameVersions().refresh();
+           if (changelog == null || changelog.isEmpty()) {
+               throw new IllegalArgumentException("Changelog cannot be empty");
+           }
 
-        if (gameVersions.isEmpty()) {
-            throw new IllegalArgumentException("At-least 1 game version must be defined");
-        }
+           if (gameVersions.isEmpty()) {
+               throw new IllegalArgumentException("At-least 1 game version must be defined");
+           }
+       }
     }
 
     /**
