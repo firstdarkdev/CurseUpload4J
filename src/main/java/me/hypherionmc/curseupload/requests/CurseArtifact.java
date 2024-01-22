@@ -41,6 +41,8 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -133,6 +135,29 @@ public class CurseArtifact {
         child.changelog = this.changelog;
         child.releaseType = this.releaseType;
         child.relationships = new HashMap<>(this.relationships);
+
+        this.children.add(child);
+        return child;
+    }
+
+    /**
+     * Add a file that will be uploaded along with the main file
+     * @param file The file to be uploaded
+     */
+    public CurseArtifact addAdditionalFile(@NotNull File file, @Nullable String displayName, @Nullable String changelog) {
+        if (this.parent != null) {
+            throw new IllegalArgumentException("Child artifacts must not have their own children.");
+        }
+
+        final CurseArtifact child = new CurseArtifact(file, this.projectId, this);
+        child.changelogType = this.changelogType;
+        child.changelog = (changelog == null || changelog.isEmpty()) ? this.changelog : changelog;
+        child.releaseType = this.releaseType;
+        child.relationships = new HashMap<>(this.relationships);
+
+        if (displayName != null && !displayName.isEmpty()) {
+            child.displayName = displayName;
+        }
 
         this.children.add(child);
         return child;

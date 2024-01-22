@@ -1,13 +1,13 @@
 plugins {
     id 'java'
     id 'idea'
-    id 'com.github.johnrengelman.shadow' version '7.0.0'
+    id 'com.github.johnrengelman.shadow' version '8.0.0'
     id 'maven-publish'
     id "com.diffplug.spotless" version "6.13.0"
 }
 
-group 'me.hypherionmc.modutils'
-version '1.0.9'
+group maven_group
+version "${version_major}.${version_minor}.${version_patch}"
 java.toolchain.languageVersion = JavaLanguageVersion.of(8)
 
 configurations {
@@ -20,21 +20,22 @@ repositories {
 }
 
 dependencies {
-    shadeMe 'commons-io:commons-io:2.11.0'
-    shadeMe group: 'net.sf.trove4j', name: 'trove4j', version: '3.0.3'
-    shadeMe group: 'com.google.code.gson', name: 'gson', version: '2.8.9'
-    shadeMe group: 'org.apache.httpcomponents', name: 'httpmime', version: '4.5.14'
-    shadeMe group: 'org.apache.httpcomponents.client5', name: 'httpclient5', version: '5.2.1'
+    shadeMe group: 'commons-io', name: 'commons-io', version: apache_commons
+    shadeMe group: 'net.sf.trove4j', name: 'trove4j', version: trove4j
+    shadeMe group: 'com.google.code.gson', name: 'gson', version: gson
+    shadeMe group: 'org.apache.httpcomponents', name: 'httpmime', version: httpmime
+    shadeMe group: 'org.apache.httpcomponents.client5', name: 'httpclient5', version: httpclient
+    shadeMe group: 'org.jetbrains', name: 'annotations', version: jetbrains
 
     // Logging
-    shadeMe 'org.apache.logging.log4j:log4j-api:2.20.0'
-    shadeMe 'org.apache.logging.log4j:log4j-core:2.20.0'
-    shadeMe 'org.apache.logging.log4j:log4j-slf4j-impl:2.20.0'
+    shadeMe group: 'org.apache.logging.log4j', name: 'log4j-api', version: log4j
+    shadeMe group: 'org.apache.logging.log4j', name: 'log4j-core', version: log4j
+    shadeMe group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: log4j
 }
 
 shadowJar {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    configurations = [project.configurations.getByName("shadeMe")]
+    configurations = [project.configurations.shadeMe]
     archiveClassifier.set(null)
 }
 
