@@ -43,5 +43,6 @@ public class CurseMetaData {
     public Set<Long> gameVersions = new HashSet<>();
     public CurseReleaseType releaseType = CurseReleaseType.RELEASE;
     public ProjectRelations relations = null;
+    public boolean isMarkedForManualRelease = false;
 
 }

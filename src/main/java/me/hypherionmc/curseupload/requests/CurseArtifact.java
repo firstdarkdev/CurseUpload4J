@@ -66,6 +66,7 @@ public class CurseArtifact {
     private transient final List<CurseArtifact> children = new ArrayList<>();
     private transient Map<String, String> relationships = new HashMap<>();
     private transient final ProjectRelations uploadRelations = new ProjectRelations();
+    private transient boolean isManualRelease = false;
 
     // Can be changed
     private String changelog;
@@ -122,12 +123,21 @@ public class CurseArtifact {
     }
 
     /**
+     * Mark a release as a manual release. This means, the file is uploaded and approved, but will not appear on the site
+     * until you approve it.
+     */
+    public CurseArtifact manualRelease() {
+        this.isManualRelease = true;
+        return this;
+    }
+
+    /**
      * Add a file that will be uploaded along with the main file
      * @param file The file to be uploaded
      */
     public CurseArtifact addAdditionalFile(File file) {
         if (this.parent != null) {
-            throw new IllegalArgumentException("Child artifacts must nog have their own children.");
+            throw new IllegalArgumentException("Child artifacts must not have their own children.");
         }
 
         final CurseArtifact child = new CurseArtifact(file, this.projectId, this);
@@ -251,6 +261,7 @@ public class CurseArtifact {
         }
 
         metaData.releaseType = releaseType;
+        metaData.isMarkedForManualRelease = isManualRelease;
 
         if (!this.uploadRelations.projects.isEmpty()) {
             metaData.relations = this.uploadRelations;
@@ -344,10 +355,10 @@ public class CurseArtifact {
                         errorCode = error.errorCode;
                         errorMessage = error.errorMessage;
                     }
-                    CurseUploadApi.INSTANCE.getLogger().error("Failed to Upload artifact to Curseforge. Code: {}, Error: {}", errorCode, errorMessage);
+                    CurseUploadApi.INSTANCE.getLogger().error("Failed to Upload artifact to CurseForge. Code: {}, Error: {}", errorCode, errorMessage);
                 }
             } catch (Exception e) {
-                CurseUploadApi.INSTANCE.getLogger().error("Failed to Upload artifact to Curseforge.", e);
+                CurseUploadApi.INSTANCE.getLogger().error("Failed to Upload artifact to CurseForge.", e);
             }
         } else {
             // Do not upload the file. Instead, write the JSON that will be sent to the console
