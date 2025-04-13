@@ -52,7 +52,7 @@ public class HTTPUtils {
         connection.setRequestProperty("Accept-Encoding", "gzip");
         connection.addRequestProperty("X-Api-Token", token);
 
-        if (connection.getContentEncoding().equals("gzip")) {
+        if (connection.getContentEncoding() != null && connection.getContentEncoding().equals("gzip")) {
             return new InputStreamReader(new GZIPInputStream(connection.getInputStream()));
         }
 
