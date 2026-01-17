@@ -25,6 +25,7 @@ package me.hypherionmc.curseupload.util;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -42,15 +43,13 @@ public class HTTPUtils {
     public static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     /**
-     * Make a GET request to the Curseforge API
+     * Make a GET request to the CurseForge API
      * @param url The API Endpoint that will be called
-     * @param token The API Token. Required
      */
-    public static Reader fetch(String url, String token) throws IOException {
+    public static Reader fetch(String url) throws IOException {
         final HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
         connection.addRequestProperty("User-Agent", "CurseUpload4J");
         connection.setRequestProperty("Accept-Encoding", "gzip");
-        connection.addRequestProperty("X-Api-Token", token);
 
         if (connection.getContentEncoding() != null && connection.getContentEncoding().equals("gzip")) {
             return new InputStreamReader(new GZIPInputStream(connection.getInputStream()));

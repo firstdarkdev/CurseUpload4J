@@ -23,6 +23,7 @@
  */
 package me.hypherionmc.curseupload;
 
+import me.hypherionmc.curseupload.constants.GameType;
 import me.hypherionmc.curseupload.requests.CurseArtifact;
 import me.hypherionmc.curseupload.requests.GameVersions;
 import org.slf4j.Logger;
@@ -48,6 +49,8 @@ public class CurseUploadApi {
 
     // Test the API without actually uploading anything
     private boolean debug = false;
+
+    private GameType gameType = GameType.MINECRAFT;
 
     /**
      * Create a new API Client
@@ -77,6 +80,18 @@ public class CurseUploadApi {
      */
     public void setDebug(boolean debug) {
         this.debug = debug;
+    }
+
+    /**
+     * Set the {@link GameType} the project is for
+     * @param type The game the project belongs to
+     */
+    public void setGameType(GameType type) {
+        this.gameType = type;
+    }
+
+    public GameType getGameType() {
+        return this.gameType;
     }
 
     public boolean isDebug() {

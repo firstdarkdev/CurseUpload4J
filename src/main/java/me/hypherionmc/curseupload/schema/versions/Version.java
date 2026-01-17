@@ -23,31 +23,41 @@
  */
 package me.hypherionmc.curseupload.schema.versions;
 
+import java.util.List;
+
 /**
  * @author HypherionSA
  * POJO Object that represents a curseforge Game Version response
  */
 public class Version {
 
-    long id;
-    long gameVersionTypeID;
-    String slug;
-    String name;
+    int type;
+    List<VersionData> versions;
 
-    public long id() {
-        return this.id;
+    public int type() {
+        return this.type;
     }
 
-    public long gameVersionTypeID() {
-        return this.gameVersionTypeID;
+    public List<VersionData> versions() {
+        return this.versions;
     }
 
-    public String slug() {
-        return this.slug;
-    }
+    public static class VersionData {
+        long id;
+        String slug;
+        String name;
 
-    public String name() {
-        return this.name;
+        public long id() {
+            return this.id;
+        }
+
+        public String slug() {
+            return this.slug;
+        }
+
+        public String name() {
+            return this.name;
+        }
     }
 
 }

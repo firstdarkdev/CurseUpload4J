@@ -29,12 +29,23 @@ package me.hypherionmc.curseupload.schema.versions;
  */
 public class VersionType {
 
+    long gameId;
     long id;
+    boolean isSyncable;
     String name;
     String slug;
+    int status;
+
+    public long gameId() {
+        return this.gameId;
+    }
 
     public long id() {
         return this.id;
+    }
+
+    public boolean syncable() {
+        return this.isSyncable;
     }
 
     public String name() {
@@ -43,6 +54,10 @@ public class VersionType {
 
     public String slug() {
         return this.slug;
+    }
+
+    public int status() {
+        return status;
     }
 
 }

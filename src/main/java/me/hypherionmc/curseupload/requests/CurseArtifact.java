@@ -49,8 +49,6 @@ import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.util.*;
 
-import static me.hypherionmc.curseupload.constants.ApiEndpoints.UPLOAD_URL;
-
 /**
  * @author HypherionSA
  * POJO and Helper class for managing the actual upload
@@ -330,7 +328,7 @@ public class CurseArtifact {
         requestBody.addTextBody("metadata", HTTPUtils.gson.toJson(this.writeMetaData()), ContentType.APPLICATION_JSON);
         requestBody.addBinaryBody("file", this.artifact);
 
-        final HttpPost request = new HttpPost(String.format(UPLOAD_URL, this.projectId));
+        final HttpPost request = new HttpPost(String.format(CurseUploadApi.INSTANCE.getGameType().uploadEndpoint(), this.projectId));
         request.addHeader("X-Api-Token", CurseUploadApi.INSTANCE.getApiKey());
         request.setEntity(requestBody.build());
 
