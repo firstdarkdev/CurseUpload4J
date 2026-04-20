@@ -340,7 +340,7 @@ public class CurseArtifact {
                     final InputStreamReader reader = new InputStreamReader(response.getEntity().getContent());
                     this.curseFileId = HTTPUtils.gson.fromJson(reader, ResponseSuccess.class).id;
                     reader.close();
-                    CurseUploadApi.INSTANCE.getLogger().error("Successfully uploaded artifact {} with ID {}", this.artifact.getName(), this.curseFileId);
+                    CurseUploadApi.INSTANCE.log("Successfully uploaded artifact {} with ID {}", this.artifact.getName(), this.curseFileId);
                 } else {
                     int errorCode = response.getStatusLine().getStatusCode();
                     String errorMessage = response.getStatusLine().getReasonPhrase();
@@ -353,10 +353,10 @@ public class CurseArtifact {
                         errorCode = error.errorCode;
                         errorMessage = error.errorMessage;
                     }
-                    CurseUploadApi.INSTANCE.getLogger().error("Failed to Upload artifact to CurseForge. Code: {}, Error: {}", errorCode, errorMessage);
+                    CurseUploadApi.INSTANCE.log("Failed to Upload artifact to CurseForge. Code: {}, Error: {}", errorCode, errorMessage);
                 }
             } catch (Exception e) {
-                CurseUploadApi.INSTANCE.getLogger().error("Failed to Upload artifact to CurseForge.", e);
+                CurseUploadApi.INSTANCE.log("Failed to Upload artifact to CurseForge.", e);
             }
         } else {
             // Do not upload the file. Instead, write the JSON that will be sent to the console
@@ -364,7 +364,7 @@ public class CurseArtifact {
             object.add("metadata", HTTPUtils.gson.toJsonTree(this.writeMetaData()));
             object.addProperty("file", this.artifact.getName());
 
-            CurseUploadApi.INSTANCE.getLogger().error(HTTPUtils.gson.toJson(object));
+            CurseUploadApi.INSTANCE.log(HTTPUtils.gson.toJson(object));
         }
     }
 

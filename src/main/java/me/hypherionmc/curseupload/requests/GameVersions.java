@@ -84,7 +84,7 @@ public class GameVersions {
                 }
             }
         } catch (Exception e) {
-            CurseUploadApi.INSTANCE.getLogger().error("Failed to fetch CurseForge Versions", e);
+            CurseUploadApi.INSTANCE.log("Failed to fetch CurseForge Versions", e);
         }
     }
 

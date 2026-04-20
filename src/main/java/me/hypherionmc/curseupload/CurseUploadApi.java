@@ -26,10 +26,14 @@ package me.hypherionmc.curseupload;
 import me.hypherionmc.curseupload.constants.GameType;
 import me.hypherionmc.curseupload.requests.CurseArtifact;
 import me.hypherionmc.curseupload.requests.GameVersions;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.helpers.FormattingTuple;
+import org.slf4j.helpers.MessageFormatter;
 
 import java.io.FileNotFoundException;
+import java.util.function.Consumer;
 
 /**
  * @author HypherionSA
@@ -39,7 +43,10 @@ public class CurseUploadApi {
 
     // A static reference to an instance of this class. Used internally
     public static CurseUploadApi INSTANCE;
-    private final Logger logger;
+
+    // Either logger or logConsumer must be non-null
+    private final @Nullable Logger logger;
+    private final @Nullable Consumer<String> logConsumer;
 
     // Upload API Token. Required
     private final String apiKey;
@@ -66,8 +73,22 @@ public class CurseUploadApi {
      * @param logger SLF4J Logger to use instead of the default one
      */
     public CurseUploadApi(String apiKey, Logger logger) {
+        this(apiKey, null, logger);
+    }
+
+    /**
+     * Create a new API Client
+     * @param apiKey API Key REQUIRED to use any of the upload endpoints
+     * @param logger a logging {@link Consumer function} to use instead of the default {@link Logger logger}
+     */
+    public CurseUploadApi(String apiKey, Consumer<String> logger) {
+        this(apiKey, logger, null);
+    }
+
+    private CurseUploadApi(String apiKey, @Nullable Consumer<String> logConsumer, @Nullable Logger logger) {
         this.apiKey = apiKey;
         this.logger = logger;
+        this.logConsumer = logConsumer;
         this.gameVersions = new GameVersions();
         INSTANCE = this;
 
@@ -122,7 +143,32 @@ public class CurseUploadApi {
         });
     }
 
+    /**
+     * @deprecated replace with {@link #log}
+     */
+    @Deprecated
     public Logger getLogger() {
-        return logger;
+        if (logger != null) return logger;
+        String detail = (logConsumer == null) ? ""
+                : " " + getClass().getSimpleName()
+                + " was configured with a plain logging function";
+        throw new IllegalStateException("No logger available." + detail);
+    }
+
+    public void log(String message) {
+        if (logger != null) logger.error(message);
+        if (logConsumer != null) logConsumer.accept(message);
+    }
+
+    public void log(String format, Object ...args) {
+        if (logger != null) logger.error(format, args);
+        if (logConsumer != null) {
+            FormattingTuple fmt = MessageFormatter.arrayFormat(format, args);
+            Throwable throwable = fmt.getThrowable();
+            String message = (throwable == null)
+                    ? fmt.getMessage()
+                    : fmt.getMessage() + ": " + throwable.getLocalizedMessage();
+            logConsumer.accept(message);
+        }
     }
 }
