@@ -1,6 +1,6 @@
 ## CurseUpload4J
 
-This project is an unofficial JAVA wrapper around the [Curseforge Upload API](https://support.curseforge.com/en/support/solutions/articles/9000197321-curseforge-upload-api).
+This project is an unofficial JAVA wrapper around the [CurseForge Upload API](https://support.curseforge.com/en/support/solutions/articles/9000197321-curseforge-upload-api).
 
 It was designed for use with our custom Mod Publishing plugin, but anyone can use it.
 
@@ -10,13 +10,13 @@ To use this library in your own Project, add the following maven repository:
 
 ```gradle
 maven {
-    url "https://maven.firstdarkdev.xyz/releases"
+    url "https://maven.firstdark.dev/releases"
 }
 ```
 
 Next, add the library as a dependency (Replace VERSION with the one above):
 
-![badge](https://maven.firstdarkdev.xyz/api/badge/latest/releases/me/hypherionmc/modutils/CurseUpload4j?color=40c14a&name=CurseUpload4J)
+![badge](https://maven.firstdark.dev/api/badge/latest/releases/me/hypherionmc/modutils/CurseUpload4j?color=40c14a&name=CurseUpload4J)
 
 ```gradle
 implementation "me.hypherionmc.modutils:CurseUpload4j:VERSION"
