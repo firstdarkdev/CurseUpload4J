@@ -64,9 +64,10 @@ public class GameVersions {
         try {
             TLongSet validVersionTypes = new TLongHashSet();
 
-            Reader versionReader = HTTPUtils.fetch(gameType.versionTypesEndpoint());
-            VersionType[] types = HTTPUtils.gson.fromJson(versionReader, VersionType[].class);
-            versionReader.close();
+            VersionType[] types;
+            try (Reader versionReader = HTTPUtils.fetch(gameType.versionTypesEndpoint())) {
+                types = HTTPUtils.gson.fromJson(versionReader, VersionType[].class);
+            }
 
             for (VersionType type : types) {
                 if (type.slug().startsWith("minecraft") || type.slug().equals("java") || type.slug().equals("environment") || type.slug().equals("modloader") || type.slug().equals("game")) {
@@ -74,9 +75,10 @@ public class GameVersions {
                 }
             }
 
-            Reader gameVersionJson = HTTPUtils.fetch(gameType.versionsEndpoint());
-            Version[] versions = HTTPUtils.gson.fromJson(gameVersionJson, Version[].class);
-            gameVersionJson.close();
+            Version[] versions;
+            try (Reader gameVersionJson = HTTPUtils.fetch(gameType.versionsEndpoint())) {
+                versions = HTTPUtils.gson.fromJson(gameVersionJson, Version[].class);
+            }
 
             for (Version version : versions) {
                 if (validVersionTypes.contains(version.type())) {
