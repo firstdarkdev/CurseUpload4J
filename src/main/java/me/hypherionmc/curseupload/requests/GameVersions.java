@@ -37,6 +37,7 @@ import java.io.Reader;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author HypherionSA
@@ -102,7 +103,8 @@ public class GameVersions {
         objects.forEach(obj -> {
             long id = gameVersions.get(obj.toLowerCase());
             if (id == 0) {
-                throw new IllegalArgumentException(obj + " is not a valid game version. Valid versions are: " + gameVersions.keySet());
+                String versions = gameVersions.keySet().stream().sorted().collect(Collectors.joining(", "));
+                throw new IllegalArgumentException(obj + " is not a valid game version. Valid versions are: " + versions);
             }
             set.add(id);
         });
