@@ -34,6 +34,7 @@ import me.hypherionmc.curseupload.schema.versions.VersionType;
 import me.hypherionmc.curseupload.util.HTTPUtils;
 
 import java.io.Reader;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -80,11 +81,10 @@ public class GameVersions {
                 versions = HTTPUtils.gson.fromJson(gameVersionJson, Version[].class);
             }
 
-            for (Version version : versions) {
-                if (validVersionTypes.contains(version.type())) {
-                    version.versions().forEach(ver -> gameVersions.put(ver.name().toLowerCase(), ver.id()));
-                }
-            }
+            Arrays.stream(versions)
+                    .filter(version -> validVersionTypes.contains(version.type()))
+                    .flatMap(version -> version.versions().stream())
+                    .forEach(data -> gameVersions.put(data.name().toLowerCase(), data.id()));
         } catch (Exception e) {
             CurseUploadApi.INSTANCE.log("Failed to fetch CurseForge Versions", e);
         }
