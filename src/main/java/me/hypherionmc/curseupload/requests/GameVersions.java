@@ -29,11 +29,13 @@ import gnu.trove.set.TLongSet;
 import gnu.trove.set.hash.TLongHashSet;
 import me.hypherionmc.curseupload.CurseUploadApi;
 import me.hypherionmc.curseupload.constants.GameType;
+import me.hypherionmc.curseupload.errors.InvalidCurseVersionException;
 import me.hypherionmc.curseupload.schema.versions.Version;
 import me.hypherionmc.curseupload.schema.versions.VersionType;
 import me.hypherionmc.curseupload.util.HTTPUtils;
 
 import java.io.Reader;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -64,9 +66,10 @@ public class GameVersions {
         try {
             TLongSet validVersionTypes = new TLongHashSet();
 
-            Reader versionReader = HTTPUtils.fetch(gameType.versionTypesEndpoint());
-            VersionType[] types = HTTPUtils.gson.fromJson(versionReader, VersionType[].class);
-            versionReader.close();
+            VersionType[] types;
+            try (Reader versionReader = HTTPUtils.fetch(gameType.versionTypesEndpoint())) {
+                types = HTTPUtils.gson.fromJson(versionReader, VersionType[].class);
+            }
 
             for (VersionType type : types) {
                 if (type.slug().startsWith("minecraft") || type.slug().equals("java") || type.slug().equals("environment") || type.slug().equals("modloader") || type.slug().equals("game")) {
@@ -74,15 +77,15 @@ public class GameVersions {
                 }
             }
 
-            Reader gameVersionJson = HTTPUtils.fetch(gameType.versionsEndpoint());
-            Version[] versions = HTTPUtils.gson.fromJson(gameVersionJson, Version[].class);
-            gameVersionJson.close();
-
-            for (Version version : versions) {
-                if (validVersionTypes.contains(version.type())) {
-                    version.versions().forEach(ver -> gameVersions.put(ver.name().toLowerCase(), ver.id()));
-                }
+            Version[] versions;
+            try (Reader gameVersionJson = HTTPUtils.fetch(gameType.versionsEndpoint())) {
+                versions = HTTPUtils.gson.fromJson(gameVersionJson, Version[].class);
             }
+
+            Arrays.stream(versions)
+                    .filter(version -> validVersionTypes.contains(version.type()))
+                    .flatMap(version -> version.versions().stream())
+                    .forEach(data -> gameVersions.put(data.name().toLowerCase(), data.id()));
         } catch (Exception e) {
             CurseUploadApi.INSTANCE.log("Failed to fetch CurseForge Versions", e);
         }
@@ -93,18 +96,20 @@ public class GameVersions {
      * Used when sending a request to the API
      * @param objects The list of game versions to check
      * @return The list of game versions ID's if no error occurred
+     * @throws InvalidCurseVersionException If any game versions are not supported by CurseForge
      */
     public Set<Long> resolveGameVersion(Set<String> objects) {
-        Set<Long> set = new HashSet<>();
+        Set<Long> ids = new HashSet<>();
+        Set<String> invalid = new HashSet<>();
 
         objects.forEach(obj -> {
-            long id = gameVersions.get(obj.toLowerCase());
-            if (id == 0) {
-                throw new IllegalArgumentException(obj + " is not a valid game version. Valid versions are: " + gameVersions.keySet());
-            }
-            set.add(id);
+            String version = obj.toLowerCase();
+            long id = gameVersions.get(version);
+            if (id == 0) invalid.add(version);
+            else ids.add(id);
         });
 
-        return set;
+        if (invalid.isEmpty()) return ids;
+        else throw InvalidCurseVersionException.of(invalid, gameVersions.keySet());
     }
 }
